@@ -1,10 +1,10 @@
 {
   "include": [
-    "/home/d/git/pycatalicism"
+    "/home/d/git/pyopspec"
   ],
   "executionEnvironments": [
     {
-    "root": "/home/d/git/pycatalicism"
+    "root": "/home/d/git/pyopspec"
     }
   ]
 }
