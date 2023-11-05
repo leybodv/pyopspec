@@ -1,7 +1,7 @@
 pressure_controller = 
 
-mfcs = [
-        
-        ]
+mfcs = {
+        'Ar': ,
+        }
 
 furnace = 
