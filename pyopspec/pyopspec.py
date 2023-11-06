@@ -27,11 +27,18 @@ def play(args:argparse.Namespace):
                 config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
             time.sleep(step.time * 60)
         elif isinstance(step, CoolingStep):
-            raise NotImplementedError()
+            config.pressure_controller.set_pressure(step.pressure)
+            for gas in step.flow_rates:
+                config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
+            config.furnace.set_cooling_rate(step.cooling_rate)
+            config.furnace.cool_down_to(step.target_temperature)
         elif isinstance(step, FinalStep):
-            raise NotImplementedError()
+            config.pressure_controller.set_pressure(step.pressure)
+            for gas in step.flow_rates:
+                config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
+            config.furnace.set_temperature(step.temperature)
         else:
-            raise Exception()
+            raise UnknownStepException(f'Unknown step: {step}')
 
 def main():
     """
