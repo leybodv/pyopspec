@@ -2,7 +2,7 @@ class HeatingStep():
     """
     """
 
-    def __init__(self, pressure:int, flow_rates:dict[str,float], heating_rate:float, target_temperature:float):
+    def __init__(self, pressure:float, flow_rates:dict[str,float], heating_rate:float, target_temperature:float):
         """
         """
         self.pressure = pressure
