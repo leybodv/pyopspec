@@ -1,9 +1,28 @@
 import argparse
 import time
+import importlib
+import importlib.util
+import types
+import sys
+from pathlib import Path
 
-import pyopspec.process_config as process_config
 import pyopspec.config as config
 from pyopspec.plotters.process_plotter import DataCollectorPlotter
+
+def _import_config(path:Path) -> types.ModuleType:
+    """
+    """
+    config_spec = importlib.util.spec_from_file_location('process_config', path)
+    if config_spec is None:
+        raise Exception(f'Cannot read config file at {path}')
+    config_loader = config_spec.loader
+    if config_loader is None:
+        raise Exception(f'Cannot read config file at {path}')
+    config_module = importlib.util.module_from_spec(config_spec)
+    sys.modules['process_config'] = config_module
+    config_loader.exec_module(config_module)
+    process_config = importlib.import_module('process_config')
+    return process_config
 
 def play(args:argparse.Namespace):
     """
@@ -12,6 +31,8 @@ def play(args:argparse.Namespace):
     for gas in config.mfcs:
         config.mfcs[gas].connect()
     config.furnace.connect()
+    config_path = Path(args.config)
+    process_config = _import_config(config_path)
     plotter = DataCollectorPlotter()
     plotter.start()
     for step in process_config.steps:
