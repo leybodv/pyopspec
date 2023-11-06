@@ -8,6 +8,10 @@ from pathlib import Path
 
 import pyopspec.config as config
 from pyopspec.plotters.process_plotter import DataCollectorPlotter
+from pyopspec.steps.heating_step import HeatingStep
+from pyopspec.steps.isothermal_step import IsothermalStep
+from pyopspec.steps.cooling_step import CoolingStep
+from pyopspec.steps.final_step import FinalStep
 
 def _import_config(path:Path) -> types.ModuleType:
     """
