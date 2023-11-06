@@ -5,9 +5,9 @@ from pycatalicism.mass_flow_controller.mfc_exceptions import MFCStateException
 from pycatalicism.mass_flow_controller.bronkhorst_mfc_calibration import BronkhorstMFCCalibration
 import pycatalicism.mass_flow_controller.mass_flow_controller_logging as mfc_logging
 
-class BronkhorstF201CV():
+class BronkhorstMFC():
     """
-    Class represents Bronkhorst F201CV mass flow controller.
+    Class represents Bronkhorst mass flow controller.
     """
 
     def __init__(self, serial_address:str, serial_id:str, calibrations:dict[int, BronkhorstMFCCalibration]):
