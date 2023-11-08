@@ -5,6 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 
 install_requires = [
+            "bronkhorst-propar>=1.0",
     ]
 
 setuptools.setup(
