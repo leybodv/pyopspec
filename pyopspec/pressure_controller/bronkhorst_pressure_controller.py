@@ -4,10 +4,12 @@ class BronkhorstPressureController():
     """
     """
 
-    def __init__(self):
+    def __init__(self, port:str, serial_number:str, address:int=1):
         """
         """
-        raise NotImplementedError()
+        self._port = port
+        self._serial_number = serial_number
+        self._address = address
 
     def connect(self):
         """
@@ -22,7 +24,7 @@ class BronkhorstPressureController():
         self._pressure_unit = self._propar_instrument.readParameter(129)
         setpoint = self._propar_instrument.readParameter(206)
         measure = self._propar_instrument.readParameter(205)
-        self._logger.info(f'Connected to pressure controller. Max controlled pressure: {self._max_controlled_pressure} {self._pressure_unit}. Current setpoint value: {setpoint} {self._pressure_unit}. Current measured value: {measure} {self._pressure_unit}')
+        self._logger.info(f'Connected to pressure controller {self._serial_number}. Max controlled pressure: {self._max_controlled_pressure} {self._pressure_unit}. Current setpoint value: {setpoint} {self._pressure_unit}. Current measured value: {measure} {self._pressure_unit}')
 
     def set_pressure(self, pressure:float):
         """
@@ -32,3 +34,4 @@ class BronkhorstPressureController():
         if pressure > self._max_controlled_pressure:
             raise OutOfDeviceCapacityException(f'Trying to set pressure {pressure} {self._pressure_unit} on a device with max capacity of {self._max_controlled_pressure} {self._pressure_unit}')
         self._propar_instrument.writeParameter(dde_nr=206, data=pressure)
+        self._logger.info(f'Set pressure of {self._serial_number} to {pressure} {self._pressure_unit}')
