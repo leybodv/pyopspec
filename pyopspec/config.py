@@ -7,7 +7,8 @@ pressure_controller = BronkhorstPressureController(
                                                     )
 
 mfcs = {
-        'Ar': ,
+        'Ar':BronkhorstMassFlowController(),
+        'CO':BronkhorstMassFlowController(),
         }
 
 furnace = 
