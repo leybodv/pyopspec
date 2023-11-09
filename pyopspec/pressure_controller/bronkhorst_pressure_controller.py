@@ -10,6 +10,7 @@ class BronkhorstPressureController():
         self._port = port
         self._serial_number = serial_number
         self._address = address
+        self._connected = False
 
     def connect(self):
         """
