@@ -5,11 +5,19 @@ pressure_controller = BronkhorstPressureController(
                                                     port='',
                                                     serial_number='',
                                                     address=0,
-                                                    )
+                                                  )
 
 mfcs = {
-        'Ar':BronkhorstMassFlowController(),
-        'CO':BronkhorstMassFlowController(),
+        'Ar':BronkhorstMassFlowController(
+                                            port= ,
+                                            serial_number= ,
+                                            address= ,
+                                         ),
+        'CO':BronkhorstMassFlowController(
+                                            port= ,
+                                            serial_number= ,
+                                            address= ,
+                                         ),
         }
 
-furnace = 
+furnace = WatlowFurnaceController()
