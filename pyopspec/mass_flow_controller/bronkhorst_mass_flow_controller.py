@@ -36,6 +36,6 @@ class BronkhorstMassFlowController():
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
         if flow_rate > self._max_controlled_flowrate:
-            raise OutOfDeviceCapacityException(f'Trying to set flowrate {flow_rate} {self._flowrate_unit} on a device with max capacity of {self._max_controlled_flowrate} {self._flowrate_unit}')
+            raise OutOfDeviceCapacityException(f'Trying to set flow rate {flow_rate} {self._flowrate_unit} on a device with max capacity of {self._max_controlled_flowrate} {self._flowrate_unit}')
         self._propar_instrument.writeParameter(dde_nr=206, data=flow_rate)
-        self._logger.info(f'Set pressure of {self._serial_number} to {flow_rate} {self._flowrate_unit}')
+        self._logger.info(f'Set flow rate of {self._serial_number} to {flow_rate} {self._flowrate_unit}')
