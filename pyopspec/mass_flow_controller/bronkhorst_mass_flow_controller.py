@@ -23,9 +23,12 @@ class BronkhorstMassFlowController():
         self._propar_instrument.wink()
         self._max_controlled_flowrate = self._propar_instrument.readParameter(dde_nr=21)
         self._flowrate_unit = self._propar_instrument.readParameter(dde_nr=129)
+        self._calibration_fluid_name = self._propar_instrument.readParameter(dde_nr=)
+        self._calibration_inlet_pressure = self._propar_instrument.readParameter(dde_nr=178)
+        self._calibration_outlet_pressure = self._propar_instrument.readParameter(dde_nr=179)
         setpoint = self._propar_instrument.readParameter(dde_nr=206)
         measure = self._propar_instrument.readParameter(dde_nr=205)
-        self._logger.info(f'Connected to mass flow controller {self._serial_number}. Max controlled flow rate: {self._max_controlled_flowrate} {self._flowrate_unit}. Current setpoint value: {setpoint} {self._flowrate_unit}. Current measured value: {measure} {self._flowrate_unit}')
+        self._logger.info(f'Connected to mass flow controller {self._serial_number}. Current calibration: {self._calibration_fluid_name}, inlet {self._calibration_inlet_pressure} bar(a), outlet {self._calibration_outlet_pressure} bar(a). Max controlled flow rate: {self._max_controlled_flowrate} {self._flowrate_unit}. Current setpoint value: {setpoint} {self._flowrate_unit}. Current measured value: {measure} {self._flowrate_unit}')
 
     def set_flow_rate(self, flow_rate:float):
         """
