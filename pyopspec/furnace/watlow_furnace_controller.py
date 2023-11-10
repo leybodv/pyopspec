@@ -1,3 +1,5 @@
+import time
+
 from pywatlow.watlow import Watlow
 
 class WatlowFurnaceController():
@@ -30,6 +32,8 @@ class WatlowFurnaceController():
     def set_heating_rate(self, heating_rate:float):
         """
         """
+        if not self._connected:
+            raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
         response = self._watlow_protocol.writeParam(param=7017, value=self._c_per_min_to_watlow_unit(heating_rate), data_type=float)
         if self._display_temperature_units != '°C':
             raise NotSupportedException(f'Display units in °F are not supported. Change them to °C, or test pywatlow behavior and change the code accordingly')
@@ -38,6 +42,22 @@ class WatlowFurnaceController():
         if response['error'] is not None:
             raise WatlowProtocolException(f'Error occured while setting heating rate: {response['error']}')
         self._logger.info(f'Heating rate parameter have been set to {heating_rate}{self._display_temperature_units}/{self._ramp_rate_units}')
+
+    def heat_up_to(self, target_temperature:float):
+        """
+        """
+        if not self._connected:
+            raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
+        response = self._watlow_protocol.write(value=self._celsius_to_farenheit(target_tamperature))
+        if response['error'] is not None:
+            raise WatlowProtocolException(f'Error occured while setting temperature: {response['error']}')
+        self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {target_temperature}°C')
+        while True:
+            current_temperature = self._farenheit_to_celsius(self._watlow_protocol.read()['data'])
+            if current_temperature >= target_temperature * 0.99:
+                break
+            time.sleep(60)
+        self._logger.info(f'Finished heating of the furnace with furnace controller {self._serial_number}')
 
     def _farenheit_to_celsius(self, farenheit:float) -> float:
         """
