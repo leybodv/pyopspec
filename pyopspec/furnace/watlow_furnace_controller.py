@@ -43,6 +43,16 @@ class WatlowFurnaceController():
             raise WatlowProtocolException(f'Error occured while setting heating rate: {response["error"]}') #pyright: ignore[reportOptionalSubscript]
         self._logger.info(f'Ramp rate parameter have been set to {ramp_rate}{self._display_temperature_units}/{self._ramp_rate_units}')
 
+    def set_temperature(self, temperature:float):
+        """
+        """
+        if not self._connected:
+            raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
+        response = self._watlow_protocol.write(value=self._celsius_to_farenheit(temperature))
+        if response['error'] is not None: #pyright: ignore[reportOptionalSubscript]
+            raise WatlowProtocolException(f'Error occured while setting temperature: {response["error"]}') #pyright: ignore[reportOptionalSubscript]
+        self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {temperature}°C')
+
     def heat_up_to(self, target_temperature:float):
         """
         """
