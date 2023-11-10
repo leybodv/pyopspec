@@ -4,6 +4,7 @@ import time
 import threading
 
 from pyopspec.furnace.furnace_controller import FurnaceController
+from pyopspec.mass_flow_controller.mass_flow_controller import MassFlowController
 from pyopspec.plotters.non_blocking_plotter import NonBlockingPlotter
 from pyopspec.plotters.point import Point
 
