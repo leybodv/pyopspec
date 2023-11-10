@@ -29,28 +29,28 @@ class WatlowFurnaceController():
         measure = self._farenheit_to_celsius(self._watlow_protocol.read()['data'])
         self._logger.info(f'Connected to furnace {self._serial_number}. Current setpoint value: {setpoint}°C. Current measured value: {measure}°C')
 
-    def set_heating_rate(self, heating_rate:float):
+    def set_ramp_rate(self, ramp_rate:float):
         """
         """
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
-        response = self._watlow_protocol.writeParam(param=7017, value=self._c_per_min_to_watlow_unit(heating_rate), data_type=float)
+        response = self._watlow_protocol.writeParam(param=7017, value=self._c_per_min_to_watlow_unit(ramp_rate), data_type=float)
         if self._display_temperature_units != '°C':
             raise NotSupportedException(f'Display units in °F are not supported. Change them to °C, or test pywatlow behavior and change the code accordingly')
         if self._ramp_rate_units != 'min':
             raise NotSupportedException(f'Ramp units in hours are not supported. Change them to minutes, or test pywatlow behavior and change the code accordingly')
         if response['error'] is not None:
-            raise WatlowProtocolException(f'Error occured while setting heating rate: {response['error']}')
-        self._logger.info(f'Heating rate parameter have been set to {heating_rate}{self._display_temperature_units}/{self._ramp_rate_units}')
+            raise WatlowProtocolException(f'Error occured while setting heating rate: {response["error"]}')
+        self._logger.info(f'Ramp rate parameter have been set to {ramp_rate}{self._display_temperature_units}/{self._ramp_rate_units}')
 
     def heat_up_to(self, target_temperature:float):
         """
         """
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
-        response = self._watlow_protocol.write(value=self._celsius_to_farenheit(target_tamperature))
+        response = self._watlow_protocol.write(value=self._celsius_to_farenheit(target_temperature))
         if response['error'] is not None:
-            raise WatlowProtocolException(f'Error occured while setting temperature: {response['error']}')
+            raise WatlowProtocolException(f'Error occured while setting temperature: {response["error"]}')
         self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {target_temperature}°C')
         while True:
             current_temperature = self._farenheit_to_celsius(self._watlow_protocol.read()['data'])
@@ -63,6 +63,11 @@ class WatlowFurnaceController():
         """
         """
         return 5 * (farenheit - 32) / 9
+
+    def _celsius_to_farenheit(self, celsius:float) -> float:
+        """
+        """
+        return 9 * celsius / 5 +32
 
     def _c_per_min_to_watlow_unit(self, heating_rate_in_c:float) -> float:
         """
