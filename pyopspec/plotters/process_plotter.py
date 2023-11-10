@@ -53,7 +53,10 @@ class DataCollectorPlotter(threading.Thread):
             fr = self._mfcs[gas].get_flow_rate()
             flow_rate_point = Point(x=t, y=fr, label=gas)
             flow_rate_points.append(flow_rate_point)
-        t = (time.time() - self._start_time) / 60.0
-        P = self._pressure_controller.get_pressure()
-        pressure_point = Point(x=t, y=P, label='pressure')
+        if self._pressure_controller is not None:
+            t = (time.time() - self._start_time) / 60.0
+            P = self._pressure_controller.get_pressure()
+            pressure_point = Point(x=t, y=P, label='pressure')
+        else:
+            pressure_point = None
         return (temperature_point, flow_rate_points, pressure_point)
