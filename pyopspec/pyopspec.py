@@ -45,7 +45,7 @@ def play(args:argparse.Namespace):
             config.pressure_controller.set_pressure(step.pressure)
             for gas in step.flow_rates:
                 config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
-            config.furnace.set_heating_rate(step.heating_rate)
+            config.furnace.set_ramp_rate(step.heating_rate)
             config.furnace.heat_up_to(step.target_temperature)
         elif isinstance(step, IsothermalStep):
             config.pressure_controller.set_pressure(step.pressure)
@@ -56,7 +56,7 @@ def play(args:argparse.Namespace):
             config.pressure_controller.set_pressure(step.pressure)
             for gas in step.flow_rates:
                 config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
-            config.furnace.set_cooling_rate(step.cooling_rate)
+            config.furnace.set_ramp_rate(step.cooling_rate)
             config.furnace.cool_down_to(step.target_temperature)
         elif isinstance(step, FinalStep):
             config.pressure_controller.set_pressure(step.pressure)
