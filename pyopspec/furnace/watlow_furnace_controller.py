@@ -2,6 +2,7 @@ import time
 
 from pywatlow.watlow import Watlow
 
+from .logging import get_logger
 from .furnace_controller import FurnaceController
 from .exceptions import *
 
@@ -15,6 +16,7 @@ class WatlowFurnaceController(FurnaceController):
         self._serial_number = serial_number
         self._watlow_protocol = Watlow(port=port, address=address)
         self._connected = False
+        self._logger = get_logger(self.__class__.__name__)
         raise NotImplementedError()
 
     def connect(self):
