@@ -6,14 +6,14 @@ import types
 import sys
 from pathlib import Path
 
-import pyopspec.process_config as process_config
+# import pyopspec.process_config as process_config
 import pyopspec.config as config
 from pyopspec.plotters.process_plotter import DataCollectorPlotter
 from pyopspec.steps.heating_step import HeatingStep
 from pyopspec.steps.isothermal_step import IsothermalStep
 from pyopspec.steps.cooling_step import CoolingStep
 from pyopspec.steps.final_step import FinalStep
-from .exceptions.exceptions import UnknownStepException
+from .exceptions import *
 
 def _import_config(path:Path) -> types.ModuleType:
     """
@@ -37,8 +37,8 @@ def play(args:argparse.Namespace):
     for gas in config.mfcs:
         config.mfcs[gas].connect()
     config.furnace.connect()
-    # config_path = Path(args.config)
-    # process_config = _import_config(config_path)
+    config_path = Path(args.config)
+    process_config = _import_config(config_path)
     plotter = DataCollectorPlotter(furnace_controller=config.furnace, mass_flow_controllers=config.mfcs, pressure_controller=config.pressure_controller)
     plotter.start()
     for step in process_config.steps:
