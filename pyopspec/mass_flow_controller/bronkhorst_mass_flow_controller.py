@@ -1,6 +1,8 @@
 import propar
 
-class BronkhorstMassFlowController():
+from .mass_flow_controller import MassFlowController
+
+class BronkhorstMassFlowController(MassFlowController):
     """
     """
 
@@ -39,3 +41,12 @@ class BronkhorstMassFlowController():
             raise OutOfDeviceCapacityException(f'Trying to set flow rate {flow_rate} {self._flowrate_unit} on a device with max capacity of {self._max_controlled_flowrate} {self._flowrate_unit}')
         self._propar_instrument.writeParameter(dde_nr=206, data=flow_rate)
         self._logger.info(f'Set flow rate of {self._serial_number} to {flow_rate} {self._flowrate_unit}')
+
+    def get_flow_rate(self) -> float:
+        """
+        """
+        if not self._connected:
+            raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
+        measure = self._propar_instrument.readParameter(dde_nr=205)
+        self._logger.debug(f'Current flow rate on mass flow controller {self._serial_number}: {measure} {self._flowrate_unit}')
+        return measure
