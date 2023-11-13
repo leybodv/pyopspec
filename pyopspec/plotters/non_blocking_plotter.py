@@ -1,7 +1,6 @@
 import multiprocessing.connection
 
 import matplotlib.pyplot as plt
-import matplotlib.axes
 
 from pyopspec.plotters.data import Data
 
