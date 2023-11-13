@@ -1,4 +1,4 @@
-from pycatalicism.plotters.point import Point
+from .point import Point
 
 class Data():
     """
