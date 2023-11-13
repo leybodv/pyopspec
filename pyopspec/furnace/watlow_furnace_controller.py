@@ -1,7 +1,9 @@
 import time
 
 from pywatlow.watlow import Watlow
+
 from .furnace_controller import FurnaceController
+from .exceptions import *
 
 class WatlowFurnaceController(FurnaceController):
     """
