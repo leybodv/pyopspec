@@ -1,6 +1,7 @@
 import propar
 
 from .pressure_controller import PressureController
+from .exceptions import *
 
 class BronkhorstPressureController(PressureController):
     """
