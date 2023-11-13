@@ -1,8 +1,9 @@
 import time
 
 from pywatlow.watlow import Watlow
+from .furnace_controller import FurnaceController
 
-class WatlowFurnaceController():
+class WatlowFurnaceController(FurnaceController):
     """
     """
 
@@ -52,6 +53,15 @@ class WatlowFurnaceController():
         if response['error'] is not None: #pyright: ignore[reportOptionalSubscript]
             raise WatlowProtocolException(f'Error occured while setting temperature: {response["error"]}') #pyright: ignore[reportOptionalSubscript]
         self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {temperature}°C')
+
+    def get_temperature(self) -> float:
+        """
+        """
+        if not self._connected:
+            raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
+        measure = self._farenheit_to_celsius(self._watlow_protocol.read()['data']) #pyright: ignore[reportOptionalSubscript]
+        self._logger.debug(f'Measured temperature on furnace controller with S/N {self._serial_number}: {measure}{self._display_temperature_units}')
+        return measure
 
     def heat_up_to(self, target_temperature:float):
         """
