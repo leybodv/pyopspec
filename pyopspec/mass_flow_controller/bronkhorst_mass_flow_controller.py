@@ -1,6 +1,7 @@
 import propar
 
 from .mass_flow_controller import MassFlowController
+from .exceptions import *
 
 class BronkhorstMassFlowController(MassFlowController):
     """
@@ -25,7 +26,7 @@ class BronkhorstMassFlowController(MassFlowController):
         self._propar_instrument.wink()
         self._max_controlled_flowrate = self._propar_instrument.readParameter(dde_nr=21)
         self._flowrate_unit = self._propar_instrument.readParameter(dde_nr=129)
-        self._calibration_fluid_name = self._propar_instrument.readParameter(dde_nr=)
+        self._calibration_fluid_name = self._propar_instrument.readParameter(dde_nr=25)
         self._calibration_inlet_pressure = self._propar_instrument.readParameter(dde_nr=178)
         self._calibration_outlet_pressure = self._propar_instrument.readParameter(dde_nr=179)
         setpoint = self._propar_instrument.readParameter(dde_nr=206)
