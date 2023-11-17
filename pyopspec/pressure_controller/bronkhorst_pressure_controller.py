@@ -2,6 +2,7 @@ import propar
 
 from .pressure_controller import PressureController
 from .exceptions import *
+from .logging import get_logger
 
 class BronkhorstPressureController(PressureController):
     """
@@ -14,6 +15,7 @@ class BronkhorstPressureController(PressureController):
         self._serial_number = serial_number
         self._address = address
         self._connected = False
+        self._logger = get_logger(self.__class__.__name__)
 
     def connect(self):
         """
@@ -35,7 +37,7 @@ class BronkhorstPressureController(PressureController):
         """
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
-        if pressure > self._max_controlled_pressure:
+        if pressure > self._max_controlled_pressure: #pyright: ignore[reportGeneralTypeIssues]
             raise OutOfDeviceCapacityException(f'Trying to set pressure {pressure} {self._pressure_unit} on a device with max capacity of {self._max_controlled_pressure} {self._pressure_unit}')
         self._propar_instrument.writeParameter(dde_nr=206, data=pressure)
         self._logger.info(f'Set pressure of {self._serial_number} to {pressure} {self._pressure_unit}')
@@ -47,4 +49,4 @@ class BronkhorstPressureController(PressureController):
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
         measure = self._propar_instrument.readParameter(205)
         self._logger.debug(f'Measured pressure on pressure controller {self._serial_number}: {measure} {self._pressure_unit}')
-        return measure
+        return measure #pyright: ignore[reportGeneralTypeIssues]
