@@ -21,7 +21,7 @@ class NonBlockingPlotter():
         self._pipe = pipe
         self._fig, (self._temperature_ax, self._flow_rates_ax) = plt.subplots(nrows=1, ncols=2)
         self._pressure_ax = self._temperature_ax.twinx()
-        self._fig.set_tight_layout(True)
+        self._fig.set_tight_layout(True) #pyright: ignore[reportGeneralTypeIssues]
         self._setup_temperature_ax()
         self._setup_pressure_ax()
         self._setup_flow_rates_ax()
