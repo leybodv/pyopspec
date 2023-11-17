@@ -2,6 +2,7 @@ import propar
 
 from .mass_flow_controller import MassFlowController
 from .exceptions import *
+from .logging import get_logger
 
 class BronkhorstMassFlowController(MassFlowController):
     """
@@ -15,6 +16,7 @@ class BronkhorstMassFlowController(MassFlowController):
         self._address = address
         self._propar_instrument = propar.instrument(comport=self._port, address=self._address)
         self._connected = False
+        self._logger = get_logger(self.__class__.__name__)
 
     def connect(self):
         """
@@ -38,7 +40,7 @@ class BronkhorstMassFlowController(MassFlowController):
         """
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
-        if flow_rate > self._max_controlled_flowrate:
+        if flow_rate > self._max_controlled_flowrate: #pyright: ignore[reportGeneralTypeIssues]
             raise OutOfDeviceCapacityException(f'Trying to set flow rate {flow_rate} {self._flowrate_unit} on a device with max capacity of {self._max_controlled_flowrate} {self._flowrate_unit}')
         self._propar_instrument.writeParameter(dde_nr=206, data=flow_rate)
         self._logger.info(f'Set flow rate of {self._serial_number} to {flow_rate} {self._flowrate_unit}')
@@ -50,4 +52,4 @@ class BronkhorstMassFlowController(MassFlowController):
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
         measure = self._propar_instrument.readParameter(dde_nr=205)
         self._logger.debug(f'Current flow rate on mass flow controller {self._serial_number}: {measure} {self._flowrate_unit}')
-        return measure
+        return measure #pyright: ignore[reportGeneralTypeIssues]
