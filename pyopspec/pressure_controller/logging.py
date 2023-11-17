@@ -5,6 +5,7 @@ Module for instantiating and configuring logger
 import logging
 
 logging_levels = {
+                    'BronkhorstPressureController':logging.INFO,
                  }
 
 def get_logger(name:str) -> logging.Logger:
