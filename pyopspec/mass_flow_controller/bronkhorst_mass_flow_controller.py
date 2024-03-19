@@ -8,7 +8,7 @@ class BronkhorstMassFlowController(MassFlowController):
     """
     """
 
-    def __init__(self, port:str, serial_number:str, address:int=1):
+    def __init__(self, port:str, serial_number:str, logfilename:str, address:int=1):
         """
         """
         self._port = port
@@ -16,7 +16,7 @@ class BronkhorstMassFlowController(MassFlowController):
         self._address = address
         self._propar_instrument = propar.instrument(comport=self._port, address=self._address)
         self._connected = False
-        self._logger = get_logger(self.__class__.__name__)
+        self._logger = get_logger(self.__class__.__name__, logfilename=logfilename)
 
     def connect(self):
         """
