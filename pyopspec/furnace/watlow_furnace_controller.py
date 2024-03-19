@@ -10,13 +10,13 @@ class WatlowFurnaceController(FurnaceController):
     """
     """
 
-    def __init__(self, serial_number:str, port:str, address:int=1):
+    def __init__(self, serial_number:str, port:str, logdir:str, address:int=1):
         """
         """
         self._serial_number = serial_number
         self._watlow_protocol = Watlow(port=port, address=address)
         self._connected = False
-        self._logger = get_logger(self.__class__.__name__)
+        self._logger = get_logger(name=self.__class__.__name__, logdir=logdir)
 
     def connect(self):
         """
