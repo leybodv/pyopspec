@@ -8,6 +8,7 @@ logfilename=f'./pyopspec_logs/{datetime.now():%Y%m%d_%H%M%S}.log'
 pressure_controller = BronkhorstPressureController(
                                                     port='COM6',
                                                     serial_number='M22202037R',
+                                                    logfilename=logfilename,
                                                     address=59,
                                                   )
 
