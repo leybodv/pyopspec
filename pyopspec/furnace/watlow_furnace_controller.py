@@ -32,14 +32,14 @@ class WatlowFurnaceController(FurnaceController):
         #if self._serial_number != device_sn:
         #    raise WrongDeviceException(f'Trying to connect device with S/N {self._serial_number} to the device with S/N {device_sn}')
         self._connected = True
-        display_units_code = self._watlow_protocol.readParam(param=3005, data_type=int)['data'] #pyright: ignore[reportOptionalSubscript]
+        display_units_code = self._read_param(protocol=self._watlow_protocol, param=3005, data_type=int)
         self._display_temperature_units = '°C' if display_units_code == 15 else '°F'
-        ramp_rate_units_code = self._watlow_protocol.readParam(param=7015, data_type=int)
+        ramp_rate_units_code = self._read_param(protocol=self._watlow_protocol, param=7015, data_type=int)
         self._ramp_rate_units = 'min' if ramp_rate_units_code == 57 else 'h'
-        setpoint_farenheit = self._watlow_protocol.readSetpoint()['data']
+        setpoint_farenheit = self._read_param(protocol=self._watlow_protocol, param=7001, data_type=float)
         self._logger.debug(f'{setpoint_farenheit = }')
         setpoint = self._farenheit_to_celsius(setpoint_farenheit) #pyright: ignore[reportOptionalSubscript]
-        measure = self._farenheit_to_celsius(self._watlow_protocol.read()['data']) #pyright: ignore[reportOptionalSubscript]
+        measure = self._farenheit_to_celsius(self._read_param(protocol=self._watlow_protocol, param=4001, data_type=float)) #pyright: ignore[reportOptionalSubscript]
         self._logger.info(f'Connected to furnace {self._serial_number}. Current setpoint value: {setpoint}°C. Current measured value: {measure}°C')
 
     def set_ramp_rate(self, ramp_rate:float):
@@ -71,7 +71,7 @@ class WatlowFurnaceController(FurnaceController):
         """
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
-        measure = self._farenheit_to_celsius(self._watlow_protocol.read()['data']) #pyright: ignore[reportOptionalSubscript]
+        measure = self._farenheit_to_celsius(self._read_param(protocol=self._watlow_protocol, param=4001, data_type=float))
         self._logger.debug(f'Measured temperature on furnace controller with S/N {self._serial_number}: {measure}{self._display_temperature_units}')
         return measure
 
@@ -80,7 +80,7 @@ class WatlowFurnaceController(FurnaceController):
         """
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
-        measure = self._farenheit_to_celsius(self._watlow_protocol.read()['data']) #pyright: ignore[reportOptionalSubscript]
+        measure = self._farenheit_to_celsius(self._read_param(protocol=self._watlow_protocol, param=4001, data_type=float))
         if measure >= target_temperature:
             self._logger.warning(f'Trying to heat up to the temperature {target_temperature}{self._display_temperature_units}, which is lower current temperature {measure}{self._display_temperature_units}')
         response = self._watlow_protocol.write(value=self._celsius_to_farenheit(target_temperature))
@@ -88,7 +88,7 @@ class WatlowFurnaceController(FurnaceController):
             raise WatlowProtocolException(f'Error occured while setting temperature: {response["error"]}') #pyright: ignore[reportOptionalSubscript]
         self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {target_temperature}°C')
         while True:
-            current_temperature = self._farenheit_to_celsius(self._watlow_protocol.read()['data']) #pyright: ignore[reportOptionalSubscript]
+            current_temperature = self._farenheit_to_celsius(self._read_param(protocol=self._watlow_protocol, param=4001, data_type=float))
             if current_temperature >= target_temperature * 0.99:
                 break
             time.sleep(60)
@@ -99,7 +99,7 @@ class WatlowFurnaceController(FurnaceController):
         """
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
-        measure = self._farenheit_to_celsius(self._watlow_protocol.read()['data']) #pyright: ignore[reportOptionalSubscript]
+        measure = self._farenheit_to_celsius(self._read_param(protocol=self._watlow_protocol, param=4001, data_type=float))
         if measure <= target_temperature:
             self._logger.warning(f'Trying to cool down to the temperature {target_temperature}{self._display_temperature_units}, which is higher then current temperature {measure}{self._display_temperature_units}')
         response = self._watlow_protocol.write(value=self._celsius_to_farenheit(target_temperature))
@@ -107,11 +107,27 @@ class WatlowFurnaceController(FurnaceController):
             raise WatlowProtocolException(f'Error occured while setting temperature: {response["error"]}') #pyright: ignore[reportOptionalSubscript]
         self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {target_temperature}°C')
         while True:
-            current_temperature = self._farenheit_to_celsius(self._watlow_protocol.read()['data']) #pyright: ignore[reportOptionalSubscript]
+            current_temperature = self._farenheit_to_celsius(self._read_param(protocol=self._watlow_protocol, param=4001, data_type=float))
             if current_temperature <= target_temperature * 1.01 or current_temperature <= 35:
                 break
             time.sleep(60)
         self._logger.info(f'Finished cooling of the furnace with furnace controller {self._serial_number}')
+
+    def _read_param(self, protocol:Watlow, param:int, data_type) -> int|float:
+        """
+        """
+        parameter = protocol.readParam(param=param, data_type=data_type)
+        if parameter is not None:
+            if parameter['error'] is not None:
+                msg = f'Error occured while reading parameter: {parameter["error"]}'
+                self._logger.error(msg=msg)
+                raise WatlowProtocolException(msg)
+            else:
+                return parameter['data']
+        else:
+            msg = 'Read None parameter'
+            self._logger.error(msg=msg)
+            raise WatlowProtocolException(msg)
 
     def _farenheit_to_celsius(self, farenheit:float) -> float:
         """
