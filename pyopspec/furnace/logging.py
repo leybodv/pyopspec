@@ -9,7 +9,7 @@ logging_levels = {
                     'WatlowFurnaceController':logging.INFO
                  }
 
-def get_logger(name:str, logdir:str) -> logging.Logger:
+def get_logger(name:str, logfilename:str) -> logging.Logger:
     """
     Get logger with corresponding name configured to log to stdout.
 
@@ -28,7 +28,7 @@ def get_logger(name:str, logdir:str) -> logging.Logger:
     logger.propagate = False
 
     # ch = logging.StreamHandler()
-    ch = logging.FileHandler(filename=logdir + f'/{datetime.now():%Y%m%d_%H%M%S}.log')
+    ch = logging.FileHandler(filename=logfilename)
     ch.setLevel(logging_levels[name])
 
     formatter = logging.Formatter(fmt='[%(asctime)s] %(name)s.%(funcName)s: %(levelname)s: %(message)s', datefmt='%d.%m.%Y %H:%M:%S')
