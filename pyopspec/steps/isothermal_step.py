@@ -2,7 +2,7 @@ class IsothermalStep():
     """
     """
 
-    def __init__(self, pressure:int, flow_rates:dict[str, float], time:int):
+    def __init__(self, pressure:int, flow_rates:dict[str, float], time:float):
         """
         """
 
