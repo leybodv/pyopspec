@@ -38,4 +38,4 @@ mfcs = {
                                          ),
       }
 
-furnace = WatlowFurnaceController(serial_number='12345', port='COM3', logfilename=f'./logs/{datetime.now():%Y%m%d_%H%M%S}.log')
+furnace = WatlowFurnaceController(serial_number='12345', port='COM3', logfilename=f'./pyopspec_logs/{datetime.now():%Y%m%d_%H%M%S}.log')
