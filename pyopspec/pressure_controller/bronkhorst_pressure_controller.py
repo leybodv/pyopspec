@@ -8,14 +8,14 @@ class BronkhorstPressureController(PressureController):
     """
     """
 
-    def __init__(self, port:str, serial_number:str, address:int=1):
+    def __init__(self, port:str, serial_number:str, logfilename:str, address:int=1):
         """
         """
         self._port = port
         self._serial_number = serial_number
         self._address = address
         self._connected = False
-        self._logger = get_logger(self.__class__.__name__)
+        self._logger = get_logger(self.__class__.__name__, logfilename=logfilename)
 
     def connect(self):
         """
