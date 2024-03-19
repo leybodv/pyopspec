@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pyopspec.pressure_controller.bronkhorst_pressure_controller import BronkhorstPressureController
 from pyopspec.mass_flow_controller.bronkhorst_mass_flow_controller import BronkhorstMassFlowController
 from pyopspec.furnace.watlow_furnace_controller import WatlowFurnaceController
@@ -36,4 +38,4 @@ mfcs = {
                                          ),
       }
 
-furnace = WatlowFurnaceController(serial_number='12345', port='COM3')
+furnace = WatlowFurnaceController(serial_number='12345', port='COM3', logfilename=f'./logs/{datetime.now():%Y%m%d_%H%M%S}.log')
