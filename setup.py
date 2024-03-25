@@ -12,7 +12,7 @@ install_requires = [
 
 setuptools.setup(
      name='pyopspec',
-     version='0.0.0',
+     version='0.0.1',
      author="Denis Leybo",
      author_email="denis@leybo.xyz",
      description="Program to control operando spectroscopic experiment",
