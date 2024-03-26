@@ -1,6 +1,7 @@
 from pyopspec.steps.heating_step import HeatingStep
 from pyopspec.steps.isothermal_step import IsothermalStep
 from pyopspec.steps.cooling_step import CoolingStep
+from pyopspec.steps.pressure_ramp_step import PressureRampStep
 from pyopspec.steps.final_step import FinalStep
 
 steps = [
@@ -33,6 +34,17 @@ steps = [
                             },
                 cooling_rate=1,
                 target_temperature=276),
+            PressureRampStep(
+                # change gas flow rates
+                # ramp pressure at a specified rate
+                pressure=5, # new setpoint value of pressure
+                pressure_ramp_rate=1, # pressure increase/decrease ramp rate in bar/min
+                flow_rates={ # flow rates in ml.n/min
+                                'Ar' :20,
+                                'H2' :0,
+                                'CO' :0,
+                                'CO2':0,
+                            },),
             FinalStep(
                 pressure=3,
                 flow_rates={
