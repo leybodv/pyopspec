@@ -1,3 +1,5 @@
+import time
+
 import propar
 
 from .pressure_controller import PressureController
@@ -31,6 +33,39 @@ class BronkhorstPressureController(PressureController):
         setpoint = self._propar_instrument.readParameter(206)
         measure = self._propar_instrument.readParameter(205)
         self._logger.info(f'Connected to pressure controller {self._serial_number}. Max controlled pressure: {self._max_controlled_pressure} {self._pressure_unit}. Current setpoint value: {setpoint} {self._pressure_unit}. Current measured value: {measure} {self._pressure_unit}')
+
+    def ramp_pressure(self, pressure:float, ramp_rate:float):
+        """
+        Increase/decrease pressure at a specified speed. Actual rate is not guaranteed. Program changes setpoint at the specified rate.
+
+        params
+        ------
+            pressure:float
+                pressure in the device units
+            ramp_rate:float
+                pressure increase/decrease rate in <pressure device units>/min
+        """
+        if not self._connected:
+            raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
+        if ramp_rate > self._max_controlled_pressure * 60:
+            raise OutOfDeviceCapacityException(f'Trying to raise pressure at {ramp_rate} {self._pressure_unit}/min with maximum rate {self._max_controlled_pressure * 60} {self._pressure_unit}/min')
+        if pressure > self._max_controlled_pressure: #pyright: ignore[reportGeneralTypeIssues]
+            raise OutOfDeviceCapacityException(f'Trying to set pressure {pressure} {self._pressure_unit} on a device with max capacity of {self._max_controlled_pressure} {self._pressure_unit}')
+        measure = self._propar_instrument.readParameter(205)
+        if measure > pressure: # decreasing pressure
+            setpoint = measure
+            while setpoint > pressure:
+                setpoint = setpoint - ramp_rate / 60
+                self._propar_instrument.writeParameter(dde_nr=206, data=setpoint)
+                time.sleep(1)
+        elif measure < pressure: # increasing pressure
+            setpoint = measure
+            while setpoint < pressure:
+                setpoint = setpoint + ramp_rate / 60
+                self._propar_instrument.writeParameter(dde_nr=206, data=setpoint)
+                time.sleep(1)
+        else:
+            return
 
     def set_pressure(self, pressure:float):
         """
