@@ -13,6 +13,7 @@ from pyopspec.steps.heating_step import HeatingStep
 from pyopspec.steps.isothermal_step import IsothermalStep
 from pyopspec.steps.cooling_step import CoolingStep
 from pyopspec.steps.final_step import FinalStep
+from pyopspec.steps.pressure_ramp_step import PressureRampStep
 from .exceptions import *
 
 def _import_config(path:Path) -> types.ModuleType:
@@ -59,6 +60,10 @@ def play(args:argparse.Namespace):
                 config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
             config.furnace.set_ramp_rate(step.cooling_rate)
             config.furnace.cool_down_to(step.target_temperature)
+        elif isinstance(step, PressureRampStep):
+            for gas in step.flow_rates:
+                config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
+            config.pressure_controller.ramp_pressure(pressure=step.pressure, ramp_rate=step.pressure_ramp_rate)
         elif isinstance(step, FinalStep):
             config.pressure_controller.set_pressure(step.pressure)
             for gas in step.flow_rates:
