@@ -4,6 +4,8 @@ from pyopspec.steps.cooling_step import CoolingStep
 from pyopspec.steps.pressure_ramp_step import PressureRampStep
 from pyopspec.steps.final_step import FinalStep
 
+export_folder_path = './exported_data'
+
 steps = [
             HeatingStep(
                 pressure=1,
