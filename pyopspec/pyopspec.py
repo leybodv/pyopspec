@@ -41,7 +41,9 @@ def play(args:argparse.Namespace):
     config_path = Path(args.config)
     process_config = _import_config(config_path)
     plotter = DataCollectorPlotter(furnace_controller=config.furnace, mass_flow_controllers=config.mfcs, pressure_controller=config.pressure_controller)
+    data_exporter = DataExporter(folder_path=process_config.export_folder_path, furnace_controller=config.furnace, mass_flow_controllers=config.mfcs, pressure_controller=config.pressure_controller)
     plotter.start()
+    data_exporter.start()
     for step in process_config.steps:
         if isinstance(step, HeatingStep):
             config.pressure_controller.set_pressure(step.pressure)
