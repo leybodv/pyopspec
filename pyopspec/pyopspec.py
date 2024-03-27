@@ -9,6 +9,7 @@ from pathlib import Path
 # import pyopspec.process_config as process_config
 import pyopspec.config as config
 from pyopspec.plotters.process_plotter import DataCollectorPlotter
+from pyopspec.data_exporters.data_exporter import DataExporter
 from pyopspec.steps.heating_step import HeatingStep
 from pyopspec.steps.isothermal_step import IsothermalStep
 from pyopspec.steps.cooling_step import CoolingStep
@@ -70,6 +71,8 @@ def play(args:argparse.Namespace):
             config.pressure_controller.set_pressure(step.pressure)
             for gas in step.flow_rates:
                 config.mfcs[gas].set_flow_rate(step.flow_rates[gas])
+            plotter.stop()
+            data_exporter.stop()
             config.furnace.set_temperature(step.temperature)
         else:
             raise UnknownStepException(f'Unknown step: {step}')
