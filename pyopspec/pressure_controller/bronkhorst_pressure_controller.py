@@ -83,5 +83,5 @@ class BronkhorstPressureController(PressureController):
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
         measure = self._propar_instrument.readParameter(205)
-        self._logger.debug(f'Measured pressure on pressure controller {self._serial_number}: {measure} {self._pressure_unit}')
+        self._logger.debug(f'Measured pressure on pressure controller {self._serial_number}: {measure:.2f} {self._pressure_unit}')
         return measure #pyright: ignore[reportGeneralTypeIssues]
