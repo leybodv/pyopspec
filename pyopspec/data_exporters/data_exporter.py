@@ -18,7 +18,7 @@ class DataExporter(threading.Thread):
         self._folder.mkdir(parents=True, exist_ok=True)
         with self._folder.joinpath('temperature.txt').open(mode='w') as f:
             f.write(f'Time, s\tTemperature, °C\n')
-        for gas in self._mass_flow_controllers:
+        for gas in mass_flow_controllers:
             with self._folder.joinpath(f'{gas}.txt').open(mode='w') as f:
                 f.write(f'Time, s\tFlow Rate, ml/min\n')
         with self._folder.joinpath('pressure.txt').open(mode='w') as f:
