@@ -43,7 +43,7 @@ class WatlowFurnaceController(FurnaceController):
         measure_farenheit = self._read_param(param=4001, data_type=float)
         measure = self._farenheit_to_celsius(measure_farenheit)
         self._connected = True
-        self._logger.info(f'Connected to furnace {self._serial_number}. Current setpoint value: {setpoint}°C. Current measured value: {measure}°C')
+        self._logger.info(f'Connected to furnace {self._serial_number}. Current setpoint value: {setpoint}°C. Current measured value: {measure:.2f}°C')
 
     def set_ramp_rate(self, ramp_rate:float):
         """
@@ -72,7 +72,7 @@ class WatlowFurnaceController(FurnaceController):
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
         measure_farenheit = self._read_param(param=4001, data_type=float)
         measure = self._farenheit_to_celsius(measure_farenheit)
-        self._logger.debug(f'Measured temperature on furnace controller with S/N {self._serial_number}: {measure}{self._display_temperature_units}')
+        self._logger.debug(f'Measured temperature on furnace controller with S/N {self._serial_number}: {measure:.2f}{self._display_temperature_units}')
         return measure
 
     def heat_up_to(self, target_temperature:float):
@@ -83,7 +83,7 @@ class WatlowFurnaceController(FurnaceController):
         measure_farenheit = self._read_param(param=4001, data_type=float)
         measure = self._farenheit_to_celsius(measure_farenheit)
         if measure >= target_temperature:
-            self._logger.warning(f'Trying to heat up to the temperature {target_temperature}{self._display_temperature_units}, which is lower current temperature {measure}{self._display_temperature_units}')
+            self._logger.warning(f'Trying to heat up to the temperature {target_temperature}{self._display_temperature_units}, which is lower current temperature {measure:.2f}{self._display_temperature_units}')
         self._write_param(param=7001, value=self._celsius_to_farenheit(target_temperature), data_type=float)
         self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {target_temperature}°C')
         while True:
@@ -102,7 +102,7 @@ class WatlowFurnaceController(FurnaceController):
         measure_farenheit = self._read_param(param=4001, data_type=float)
         measure = self._farenheit_to_celsius(measure_farenheit)
         if measure <= target_temperature:
-            self._logger.warning(f'Trying to cool down to the temperature {target_temperature}{self._display_temperature_units}, which is higher then current temperature {measure}{self._display_temperature_units}')
+            self._logger.warning(f'Trying to cool down to the temperature {target_temperature}{self._display_temperature_units}, which is higher then current temperature {measure:.2f}{self._display_temperature_units}')
         self._write_param(param=7001, value=self._celsius_to_farenheit(target_temperature), data_type=float)
         self._logger.info(f'The setpoint value of furnace controller with S/N {self._serial_number} has been set to {target_temperature}°C')
         while True:
