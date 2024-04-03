@@ -17,12 +17,12 @@ class DataExporter(threading.Thread):
         self._folder = Path(folder_path).absolute()
         self._folder.mkdir(parents=True, exist_ok=True)
         with self._folder.joinpath('temperature.txt').open(mode='w') as f:
-            f.write(f'Time, s\tTemperature, °C\n')
+            f.write(f'Time, min\tTemperature, °C\n')
         for gas in mass_flow_controllers:
             with self._folder.joinpath(f'{gas}.txt').open(mode='w') as f:
-                f.write(f'Time, s\tFlow Rate, ml/min\n')
+                f.write(f'Time, min\tFlow Rate, ml/min\n')
         with self._folder.joinpath('pressure.txt').open(mode='w') as f:
-            f.write(f'Time, s\tPressure, bar\n')
+            f.write(f'Time, min\tPressure, bar\n')
         self._furnace_controller = furnace_controller
         self._mass_flow_controllers = mass_flow_controllers
         self._pressure_controller = pressure_controller
