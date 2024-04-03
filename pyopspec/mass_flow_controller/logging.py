@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 
 logging_levels = {
-                    'BronkhorstMassFlowController':logging.INFO,
+                    'BronkhorstMassFlowController':logging.DEBUG,
                  }
 
 def get_logger(name:str, logfilename:str) -> logging.Logger:
