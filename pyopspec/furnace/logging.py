@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 
 logging_levels = {
-                    'WatlowFurnaceController':logging.DEBUG,
+                    'WatlowFurnaceController':logging.INFO,
                  }
 
 def get_logger(name:str, logfilename:str) -> logging.Logger:
