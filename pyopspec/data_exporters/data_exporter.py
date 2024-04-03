@@ -40,8 +40,8 @@ class DataExporter(threading.Thread):
             for gas in self._mass_flow_controllers:
                 t = (time.time() - self._start_time) / 60.0
                 f = self._mass_flow_controllers[gas].get_flow_rate()
-                with self._folder.joinpath(f'{gas}.txt').open(mode='a') as f:
-                    f.write(f'{t}\t{f}\n')
+                with self._folder.joinpath(f'{gas}.txt').open(mode='a') as file:
+                    file.write(f'{t}\t{f}\n')
             t = (time.time() - self._start_time) / 60.0
             p = self._pressure_controller.get_pressure()
             with self._folder.joinpath('pressure.txt').open(mode='a') as f:
