@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 
 logging_levels = {
-                    'BronkhorstMassFlowController':logging.INFO,
+                    'BronkhorstMassFlowController':logging.DEBUG,
                  }
 
 def get_logger(name:str, logfilename:str) -> logging.Logger:
@@ -27,7 +27,6 @@ def get_logger(name:str, logfilename:str) -> logging.Logger:
     logger.setLevel(logging_levels[name])
     logger.propagate = False
 
-    # ch = logging.StreamHandler()
     logfile = Path(logfilename).absolute()
     logfile.parent.mkdir(parents=True, exist_ok=True)
     if not logger.handlers: # create handlers if there are no handlers with this logger already (see https://stackoverflow.com/a/6729713/5267276)
