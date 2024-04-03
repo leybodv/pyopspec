@@ -33,7 +33,7 @@ class BronkhorstMassFlowController(MassFlowController):
         self._calibration_outlet_pressure = self._propar_instrument.readParameter(dde_nr=179)
         setpoint = self._propar_instrument.readParameter(dde_nr=206)
         measure = self._propar_instrument.readParameter(dde_nr=205)
-        self._logger.info(f'Connected to mass flow controller {self._serial_number}. Current calibration: {self._calibration_fluid_name}, inlet {self._calibration_inlet_pressure} bar(a), outlet {self._calibration_outlet_pressure} bar(a). Max controlled flow rate: {self._max_controlled_flowrate} {self._flowrate_unit}. Current setpoint value: {setpoint} {self._flowrate_unit}. Current measured value: {measure} {self._flowrate_unit}')
+        self._logger.info(f'Connected to mass flow controller {self._serial_number}. Current calibration: {self._calibration_fluid_name}, inlet {self._calibration_inlet_pressure:.2f} bar(a), outlet {self._calibration_outlet_pressure:.2f} bar(a). Max controlled flow rate: {self._max_controlled_flowrate:.2f} {self._flowrate_unit}. Current setpoint value: {setpoint:.2f} {self._flowrate_unit}. Current measured value: {measure:.2f} {self._flowrate_unit}')
 
     def set_flow_rate(self, flow_rate:float):
         """
@@ -43,7 +43,7 @@ class BronkhorstMassFlowController(MassFlowController):
         if flow_rate > self._max_controlled_flowrate: #pyright: ignore[reportGeneralTypeIssues]
             raise OutOfDeviceCapacityException(f'Trying to set flow rate {flow_rate} {self._flowrate_unit} on a device with max capacity of {self._max_controlled_flowrate} {self._flowrate_unit}')
         self._propar_instrument.writeParameter(dde_nr=206, data=flow_rate)
-        self._logger.info(f'Set flow rate of {self._serial_number} to {flow_rate} {self._flowrate_unit}')
+        self._logger.info(f'Set flow rate of {self._serial_number} to {flow_rate:.2f} {self._flowrate_unit}')
 
     def get_flow_rate(self) -> float:
         """
@@ -51,5 +51,5 @@ class BronkhorstMassFlowController(MassFlowController):
         if not self._connected:
             raise WrongDeviceStateException(f'Device with S/N {self._serial_number} is not connected')
         measure = self._propar_instrument.readParameter(dde_nr=205)
-        self._logger.debug(f'Current flow rate on mass flow controller {self._serial_number}: {measure} {self._flowrate_unit}')
+        self._logger.debug(f'Current flow rate on mass flow controller {self._serial_number}: {measure:.2f} {self._flowrate_unit}')
         return measure #pyright: ignore[reportGeneralTypeIssues]
