@@ -32,7 +32,7 @@ class BronkhorstPressureController(PressureController):
         self._pressure_unit = self._propar_instrument.readParameter(129)
         setpoint = self._propar_instrument.readParameter(206)
         measure = self._propar_instrument.readParameter(205)
-        self._logger.info(f'Connected to pressure controller {self._serial_number}. Max controlled pressure: {self._max_controlled_pressure} {self._pressure_unit}. Current setpoint value: {setpoint} {self._pressure_unit}. Current measured value: {measure:.2f} {self._pressure_unit}')
+        self._logger.info(f'Connected to pressure controller {self._serial_number}. Max controlled pressure: {self._max_controlled_pressure:.2f} {self._pressure_unit}. Current setpoint value: {setpoint:.2f} {self._pressure_unit}. Current measured value: {measure:.2f} {self._pressure_unit}')
 
     def ramp_pressure(self, pressure:float, ramp_rate:float):
         """
@@ -75,7 +75,7 @@ class BronkhorstPressureController(PressureController):
         if pressure > self._max_controlled_pressure: #pyright: ignore[reportGeneralTypeIssues]
             raise OutOfDeviceCapacityException(f'Trying to set pressure {pressure} {self._pressure_unit} on a device with max capacity of {self._max_controlled_pressure} {self._pressure_unit}')
         self._propar_instrument.writeParameter(dde_nr=206, data=pressure)
-        self._logger.info(f'Set pressure of {self._serial_number} to {pressure} {self._pressure_unit}')
+        self._logger.info(f'Set pressure of {self._serial_number} to {pressure:.2f} {self._pressure_unit}')
 
     def get_pressure(self) -> float:
         """
